@@ -1,3 +1,5 @@
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
 POSTGRES_DB=kittygram
 POSTGRES_USER=kittygram_user
 POSTGRES_PASSWORD=kittygram_password
