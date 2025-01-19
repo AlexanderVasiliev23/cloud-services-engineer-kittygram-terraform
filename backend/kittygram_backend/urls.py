@@ -1,12 +1,9 @@
-from rest_framework import routers
-
-from django.contrib import admin
-from django.urls import include, path
-
+from cats.views import AchievementViewSet, CatViewSet
 from django.conf import settings
 from django.conf.urls.static import static
-
-from cats.views import AchievementViewSet, CatViewSet
+from django.contrib import admin
+from django.urls import include, path
+from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r"cats", CatViewSet)
@@ -20,4 +17,7 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT
+    )
