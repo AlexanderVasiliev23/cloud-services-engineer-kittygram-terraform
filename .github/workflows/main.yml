@@ -82,7 +82,7 @@ jobs:
 
   deploy:
     runs-on: self-hosted
-    needs:
+#    needs:
 #      - build-and-push-backend-image
 #      - build-and-push-frontend-image
 #      - build-and-push-gateway-image
