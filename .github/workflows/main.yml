@@ -102,8 +102,8 @@ jobs:
     runs-on: self-hosted
     needs:
       - build-and-push-backend-image
-      - build-and-push-frontend-image
-      - build-and-push-gateway-image
+#      - build-and-push-frontend-image
+#      - build-and-push-gateway-image
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
