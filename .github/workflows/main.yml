@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  checkout-and-print-tree:
+  checkout-and-check-pep8:
     runs-on: self-hosted
     steps:
       - name: Check out repository code
