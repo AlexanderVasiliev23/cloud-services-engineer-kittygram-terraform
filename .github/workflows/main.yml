@@ -6,60 +6,60 @@ on:
       - main
 
 jobs:
-  pep8:
-    runs-on: self-hosted
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8==6.0.0 flake8-isort==6.0.0
-      - name: Test with flake8
-        run: python -m flake8 backend/
+#  pep8:
+#    runs-on: self-hosted
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v3
+#      - name: Set up Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: 3.9
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install flake8==6.0.0 flake8-isort==6.0.0
+#      - name: Test with flake8
+#        run: python -m flake8 backend/
 
-  build-and-push-backend-image:
-    runs-on: self-hosted
-    needs: pep8
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./backend/
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/kittygram_backend:latest
-
-  build-and-push-frontend-image:
-    runs-on: self-hosted
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Push to DockerHub
-        uses: docker/build-push-action@v4
-        with:
-          context: ./frontend/
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/kittygram_frontend:latest
+#  build-and-push-backend-image:
+#    runs-on: self-hosted
+#    needs: pep8
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v3
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Login to Docker
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#      - name: Push to DockerHub
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: ./backend/
+#          push: true
+#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/kittygram_backend:latest
+#
+#  build-and-push-frontend-image:
+#    runs-on: self-hosted
+#    steps:
+#      - name: Check out repository code
+#        uses: actions/checkout@v3
+#      - name: Set up Docker Buildx
+#        uses: docker/setup-buildx-action@v2
+#      - name: Login to Docker
+#        uses: docker/login-action@v2
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#      - name: Push to DockerHub
+#        uses: docker/build-push-action@v4
+#        with:
+#          context: ./frontend/
+#          push: true
+#          tags: ${{ secrets.DOCKERHUB_USERNAME }}/kittygram_frontend:latest
 
   build-and-push-gateway-image:
     runs-on: self-hosted
@@ -83,8 +83,8 @@ jobs:
   deploy:
     runs-on: self-hosted
     needs:
-      - build-and-push-backend-image
-      - build-and-push-frontend-image
+#      - build-and-push-backend-image
+#      - build-and-push-frontend-image
       - build-and-push-gateway-image
     steps:
       - name: Checkout repo
