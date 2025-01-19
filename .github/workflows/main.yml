@@ -120,4 +120,4 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: |
-          curl -s --data "chat_id=$TELEGRAM_CHAT_ID&text=Successful deploy 🎉" "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage"
+          curl -s --data "chat_id=$TELEGRAM_CHAT_ID&text=Successful deploy🎉" "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage"
