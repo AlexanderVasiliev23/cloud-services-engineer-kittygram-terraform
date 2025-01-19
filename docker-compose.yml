@@ -1,0 +1,49 @@
+volumes:
+  pg_data:
+  media:
+  static:
+
+services:
+
+  postgres:
+    image: postgres:13.10
+    env_file: .env
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - ${POSTGRES_PORT}:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 1s
+      timeout: 10s
+      retries: 10
+
+  backend:
+    build: ./backend/
+    env_file: .env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - media:/app/media
+      - static:/app/collected_static
+    command: >
+      sh -c "python manage.py collectstatic --noinput &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+
+  frontend:
+    build: ./frontend/
+    volumes:
+      - static:/app/build
+
+  gateway:
+    build: ./nginx/
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - media:/media
+      - static:/static
