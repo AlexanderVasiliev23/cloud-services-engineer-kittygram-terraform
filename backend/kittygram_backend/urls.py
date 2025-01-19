@@ -8,7 +8,6 @@ from django.conf.urls.static import static
 
 from cats.views import AchievementViewSet, CatViewSet
 
-
 router = routers.DefaultRouter()
 router.register(r"cats", CatViewSet)
 router.register(r"achievements", AchievementViewSet)
