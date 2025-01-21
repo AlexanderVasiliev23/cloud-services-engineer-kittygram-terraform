@@ -150,8 +150,15 @@ jobs:
     needs: autotests
     steps:
       - name: Send Telegram Notification
-        env:
-          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        run: |
-          curl -s --data "chat_id=$TELEGRAM_CHAT_ID&text=Successful deploy, autotests passed 🎉" "https://api.telegram.org/bot$TELEGRAM_TOKEN/sendMessage"
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🚀 Успешный деплой на сервер!
+            Репозиторий: ${{ github.repository }}
+            Ветка: ${{ github.ref }}
+            Последний коммит: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
+            Автор: ${{ github.actor }}
+            ✅ Все тесты прошли успешно.
+            📦 Код задеплоен на сервер.
