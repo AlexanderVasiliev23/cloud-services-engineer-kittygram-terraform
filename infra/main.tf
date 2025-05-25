@@ -4,6 +4,20 @@ terraform {
       source = "yandex-cloud/yandex"
     }
   }
+
+  backend "s3" {
+    endpoints = {
+      s3 = "https://storage.yandexcloud.net"
+    }
+    bucket = "my-test-bucket-b1glqqloj07ds96u2ita"
+    region = "ru-central1"
+    key    = "tf-state.tfstate"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+  }
 }
 
 resource "yandex_vpc_network" "network" {
@@ -11,13 +25,13 @@ resource "yandex_vpc_network" "network" {
 }
 
 resource "yandex_vpc_subnet" "subnet" {
-  name           = "subnet1"
-  network_id     = yandex_vpc_network.network.id
+  name       = "subnet1"
+  network_id = yandex_vpc_network.network.id
   v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
 resource "yandex_compute_instance" "vm-1" {
-  name = "terraform-vm-1"
+  name        = "terraform-vm-1"
   platform_id = "standard-v3"
 
   resources {

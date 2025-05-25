@@ -28,7 +28,7 @@ jobs:
 
       - name: Terraform Init
         working-directory: ./infra
-        run: terraform init
+        run: terraform init -backend-config="access_key=${{TERRAFORM_ACCESS_KEY}}" -backend-config="secret_key=${{TERRAFORM_SECRET_KEY}"
 
       - name: Terraform Plan
         working-directory: ./infra
