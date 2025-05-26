@@ -130,6 +130,7 @@ jobs:
       - build-and-push-backend-image
       - build-and-push-frontend-image
       - build-and-push-gateway-image
+      - create-server
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
