@@ -20,6 +20,12 @@ terraform {
   }
 }
 
+provider "yandex" {
+  cloud_id  = var.cloud_id
+  folder_id = var.folder_id
+  zone      = "ru-central1-a"
+}
+
 resource "yandex_vpc_network" "network" {
   name = "network1"
 }
@@ -52,9 +58,9 @@ resource "yandex_compute_instance" "vm-1" {
     nat       = true
   }
 
-  # metadata = {
-  #   user-data = file("cloud-config")
-  # }
+  metadata = {
+    user-data = file(var.new_user)
+  }
 }
 
 output "vm_public_ip" {

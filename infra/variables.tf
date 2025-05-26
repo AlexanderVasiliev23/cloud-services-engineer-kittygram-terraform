@@ -9,3 +9,8 @@ variable "folder_id" {
   type        = string
   sensitive   = true
 }
+
+variable "new_user" {
+  type    = string
+  default = "meta.txt"
+}
