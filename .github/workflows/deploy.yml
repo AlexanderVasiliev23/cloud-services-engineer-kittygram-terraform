@@ -33,6 +33,8 @@ jobs:
           IP=$(head -n 1 ip.txt | awk '{print $1}')
           rm ip.txt
           
+          echo "server_ip=$IP" >> $GITHUB_OUTPUT
+
 #          RAW_OUTPUT=$(terraform output -raw vm_public_ip)
 #
 #          echo $RAW_OUTPUT
@@ -50,7 +52,7 @@ jobs:
 #
 #          echo $IP
 #
-#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
+
           
 #          IP=$(terraform output -raw vm_public_ip)
           
