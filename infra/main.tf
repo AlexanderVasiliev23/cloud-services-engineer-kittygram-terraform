@@ -36,6 +36,31 @@ resource "yandex_vpc_subnet" "subnet" {
   v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
+resource "yandex_vpc_security_group" "vm_sg" {
+  name        = "vm-security-group"
+  description = "Разрешить весь исходящий трафик, а также входящий на 80 и 22 порты (SSH и HTTP)"
+  network_id  = yandex_vpc_network.network.id
+
+  ingress {
+    protocol       = "TCP"
+    port           = 22
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    protocol       = "TCP"
+    port           = 80
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    protocol       = "ANY"
+    from_port      = 0
+    to_port        = 65535
+    v4_cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 resource "yandex_compute_instance" "vm-1" {
   name        = "terraform-vm-1"
   platform_id = "standard-v3"
