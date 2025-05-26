@@ -31,7 +31,7 @@ jobs:
           
           terraform output -json > outputs.json
           
-           cat tests.yml
+          cat outputs.json
           
           IP=$(jq -r '.vm_public_ip.value' outputs.json)
           echo "server_ip=$IP" >> $GITHUB_OUTPUT
