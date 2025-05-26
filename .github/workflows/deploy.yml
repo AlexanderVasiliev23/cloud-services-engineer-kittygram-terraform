@@ -207,7 +207,7 @@ jobs:
 
       - name: Update tests.yml with new server IP
         run: |
-          sed -i "s|http://[0-9.]\+:[0-9]\+|http://${{ steps.terraform-apply.outputs.server_ip }}:80|g" tests.yml
+          sed -i "s|http://[0-9.]\+:[0-9]\+|http://${{ needs.create-server.outputs.server_ip }}:80|g" tests.yml
           echo "File tests.yml updated:"
           cat tests.yml
 
