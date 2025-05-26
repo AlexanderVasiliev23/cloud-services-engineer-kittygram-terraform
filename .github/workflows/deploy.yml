@@ -37,12 +37,6 @@ jobs:
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
           YC_TOKEN: ${{ secrets.YC_TOKEN }}
 
-      - name: Update tests.yml with new server IP
-        run: |
-          sed -i "s|http://[0-9.]\+:[0-9]\+|http://${{ steps.terraform-apply.outputs.server_ip }}:80|g" tests.yml
-          echo "File tests.yml updated:"
-          cat tests.yml
-
   pep8:
     runs-on: ubuntu-latest
     steps:
@@ -188,7 +182,7 @@ jobs:
               sleep 5
               timeout=$((timeout - 5))
             done
-            echo "ERROR: Docker did not start in time"
+            echo "ERROR: Docker did not start in time!"
             exit 1
 
       - name: Executing remote ssh commands to deploy
@@ -210,6 +204,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
+      - name: Update tests.yml with new server IP
+        run: |
+          sed -i "s|http://[0-9.]\+:[0-9]\+|http://${{ steps.terraform-apply.outputs.server_ip }}:80|g" tests.yml
+          echo "File tests.yml updated:"
+          cat tests.yml
 
       - name: Set up python
         uses: actions/setup-python@v4
