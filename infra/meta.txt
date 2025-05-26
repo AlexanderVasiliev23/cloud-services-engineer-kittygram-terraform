@@ -8,3 +8,11 @@ users:
    sudo: ['ALL=(ALL) NOPASSWD:ALL']
    ssh-authorized-keys:
         - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCwFem0p7jDf8Qk7Sv4C5YGS3CdlvlAbJ5xLKas7P13NfwN/powZG9VfM/jpGFsBw+VY1lbv3TbcPpdHH+IEts2qMvoOzNiWJDP0lIyH/BIVEPXQ+EgUo4fb90iXuyMlyETvnJMz40V/bvjWei+tBh2+tZBaPxNrK3iZGH5YU6M73k+YEzzXU509KjZStLUmbHHaZVycyA+Cp1rhLEDlnp5R8A0bw0Kn6bxQ3rH+CdcfgwnvV0z3XiuUPidC8+xCTOZkw7IBiIrnUm/rXS6069IJCaY8BFHoWG4BWxH0Cit48RdN9lvjfbhwauK/WBkWQVhJrGUs82N+gv6rvd8uDjYWNJIxYeNM+JUj6xTRj5u0InBba5XKCQ2Dn+EvPJE60EiSsvUaChY5YpBG5SRAsjRJKvquSmRD2FGmN/p5gWh0m7u3Bj7yHUvtt+p7QZDqqAwtkg+AfOVX+kM6wF1oUUgw6Hwc4sVCPrp8kMN5dTXQLKsl9UdGjxaj9kSaB6Uaqc= u@c
+
+runcmd:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get install -y docker-ce
+  - sudo systemctl start docker
+  - sudo systemctl enable docker
