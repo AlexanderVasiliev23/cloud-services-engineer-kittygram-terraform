@@ -43,6 +43,9 @@ jobs:
           echo "File tests.yml updated:"
           cat tests.yml
 
+      - name: Wait for Docker
+        uses: docker/setup-buildx-action@v2
+
   pep8:
     runs-on: ubuntu-latest
     steps:
