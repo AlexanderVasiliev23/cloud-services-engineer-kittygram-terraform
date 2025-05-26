@@ -28,7 +28,7 @@ jobs:
         working-directory: ./infra
         run: |
           terraform apply -auto-approve          
-          echo "$(terraform output -raw vm_public_ip)" >> $GITHUB_OUTPUT
+          echo "server_ip=$(terraform output -raw vm_public_ip)" >> $GITHUB_OUTPUT
         env:
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
