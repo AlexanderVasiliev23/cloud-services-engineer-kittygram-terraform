@@ -6,19 +6,54 @@ on:
       - main
 
 jobs:
+  create-server:
+    runs-on: ubuntu-latest
+    outputs:
+      server_ip: ${{ steps.terraform-apply.outputs.server_ip }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.11.4"
+
+      - name: Terraform Init
+        working-directory: ./infra
+        run: terraform init -backend-config="access_key=${{ secrets.TERRAFORM_ACCESS_KEY }}" -backend-config="secret_key=${{ secrets.TERRAFORM_SECRET_KEY }}"
+
+      - name: Terraform Apply (Create Server)
+        id: terraform-apply
+        working-directory: ./infra
+        run: |
+          terraform apply -auto-approve
+          echo "server_ip=$(terraform output -raw external_ip)" >> $GITHUB_OUTPUT
+        env:
+          TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
+          TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
+          YC_TOKEN: ${{ secrets.YC_TOKEN }}
+
+      - name: Update tests.yml with new server IP
+        run: |
+          sed -i "s|http://[0-9.]\+:[0-9]\+|http://${{ steps.terraform-apply.outputs.server_ip }}:80|g" tests.yml
+
   pep8:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install flake8==6.0.0 flake8-isort==6.0.0
+
       - name: Test with flake8
         run: python -m flake8 backend/
 
@@ -28,13 +63,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
       - name: Login to Docker
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Push to DockerHub
         uses: docker/build-push-action@v4
         with:
@@ -47,13 +85,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
       - name: Login to Docker
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Push to DockerHub
         uses: docker/build-push-action@v4
         with:
@@ -66,13 +107,16 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+
       - name: Login to Docker
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
       - name: Push to DockerHub
         uses: docker/build-push-action@v4
         with:
@@ -89,15 +133,17 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
       - name: Copy docker-compose.yml via ssh
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.SERVER_HOST }}
+          host: ${{ needs.create-server.outputs.server_ip }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
           source: "docker-compose.production.yml"
           target: "kittygram"
+
       - name: Create .env file
         run: |
           touch .env
@@ -106,19 +152,21 @@ jobs:
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+
       - name: Copy .env via ssh
         uses: appleboy/scp-action@master
         with:
-          host: ${{ secrets.SERVER_HOST }}
+          host: ${{ needs.create-server.outputs.server_ip }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
           source: ".env"
           target: "kittygram"
+
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_HOST }}
+          host: ${{ needs.create-server.outputs.server_ip }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
           passphrase: ${{ secrets.SERVER_SSH_PASSPHRASE }}
@@ -134,14 +182,17 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
+
       - name: Set up python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r ./backend/requirements.txt
+
       - name: Run autotests
         run: pytest
 
