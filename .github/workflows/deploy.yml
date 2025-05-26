@@ -28,7 +28,8 @@ jobs:
         working-directory: ./infra
         run: |
           terraform apply -auto-approve
-          echo "server_ip=158.160.48.17" >> $GITHUB_OUTPUT
+          echo "$(terraform output -json)"
+#          echo "server_ip=158.160.48.17" >> $GITHUB_OUTPUT
 #          terraform output -json vm_public_ip
         env:
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
@@ -38,6 +39,8 @@ jobs:
       - name: Update tests.yml with new server IP
         run: |
           sed -i "s|http://[0-9.]\+:[0-9]\+|http://${{ steps.terraform-apply.outputs.server_ip }}:80|g" tests.yml
+          echo "File tests.yml updated:"
+          cat tests.yml
 
   pep8:
     runs-on: ubuntu-latest
