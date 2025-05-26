@@ -28,15 +28,25 @@ jobs:
         working-directory: ./infra
         run: |
           terraform apply -auto-approve
-          JSON_OUTPUT=$(terraform output -json)
           
-          echo $JSON_OUTPUT
+          RAW_OUTPUT=$(terraform output -raw vm_public_ip)
           
-          IP=$(echo "$JSON_OUTPUT" | jq -r '.vm_public_ip.value')
+          echo $RAW_OUTPUT
           
-          echo $IP
+          IP=$(echo "$RAW_OUTPUT" | awk -F'::' '{print $1}')
           
           echo "server_ip=$IP" >> $GITHUB_OUTPUT
+          echo "Extracted IP: $IP"
+
+#          JSON_OUTPUT=$(terraform output -json)
+#
+#          echo $JSON_OUTPUT
+#
+#          IP=$(echo "$JSON_OUTPUT" | jq -r '.vm_public_ip.value')
+#
+#          echo $IP
+#
+#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
           
 #          IP=$(terraform output -raw vm_public_ip)
           
