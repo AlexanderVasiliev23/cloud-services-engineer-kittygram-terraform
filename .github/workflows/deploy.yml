@@ -30,6 +30,9 @@ jobs:
           terraform apply -auto-approve
           
           terraform output -json > outputs.json
+          
+           cat tests.yml
+          
           IP=$(jq -r '.vm_public_ip.value' outputs.json)
           echo "server_ip=$IP" >> $GITHUB_OUTPUT
         env:
