@@ -30,7 +30,8 @@ jobs:
         run: |
           terraform apply -auto-approve
           
-          echo $(terraform output -raw vm_public_ip)
+          IP=$(terraform output -raw vm_public_ip)
+          echo "server_ip=$IP" >> $GITHUB_OUTPUT
           
 #          IP=$(echo "$JSON_OUTPUT" | jq -r '.vm_public_ip.value')
           
