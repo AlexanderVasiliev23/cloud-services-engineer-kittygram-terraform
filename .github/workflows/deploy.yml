@@ -32,43 +32,6 @@ jobs:
           
           IP=$(terraform output -raw vm_public_ip)
           echo "server_ip=$IP" >> $GITHUB_OUTPUT
-          
-#          IP=$(echo "$JSON_OUTPUT" | jq -r '.vm_public_ip.value')
-          
-#          terraform output -raw vm_public_ip > ip.txt
-#          IP=$(head -n 1 ip.txt | awk '{print $1}')
-#
-#          cat ip.txt
-#
-#          rm ip.txt
-#
-#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
-
-#          RAW_OUTPUT=$(terraform output -raw vm_public_ip)
-#
-#          echo $RAW_OUTPUT
-#
-#          IP=$(echo "$RAW_OUTPUT" | awk -F'::' '{print $1}')
-#
-#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
-#          echo "Extracted IP: $IP"
-
-#          JSON_OUTPUT=$(terraform output -json)
-#
-#          echo $JSON_OUTPUT
-#
-#          IP=$(echo "$JSON_OUTPUT" | jq -r '.vm_public_ip.value')
-#
-#          echo $IP
-#
-
-          
-#          IP=$(terraform output -raw vm_public_ip)
-          
-#          echo $IP
-          
-#          IP=$(jq -r '.vm_public_ip.value' outputs.json)
-#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
         env:
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
