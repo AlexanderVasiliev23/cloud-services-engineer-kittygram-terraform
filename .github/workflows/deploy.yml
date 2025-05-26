@@ -29,12 +29,12 @@ jobs:
         run: |
           terraform apply -auto-approve
           
-          terraform output -json > outputs.json
+          IP=$(terraform output -raw vm_public_ip)
           
-          cat outputs.json
+          echo $IP
           
-          IP=$(jq -r '.vm_public_ip.value' outputs.json)
-          echo "server_ip=$IP" >> $GITHUB_OUTPUT
+#          IP=$(jq -r '.vm_public_ip.value' outputs.json)
+#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
         env:
           TF_VAR_cloud_id: ${{ secrets.YC_CLOUD_ID }}
           TF_VAR_folder_id: ${{ secrets.YC_FOLDER_ID }}
