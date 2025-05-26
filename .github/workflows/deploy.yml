@@ -188,7 +188,7 @@ jobs:
               sleep 5
               timeout=$((timeout - 5))
             done
-            echo "ERROR: Docker did not start in time!"
+            echo "ERROR: Docker did not start in time"
             exit 1
 
       - name: Executing remote ssh commands to deploy
