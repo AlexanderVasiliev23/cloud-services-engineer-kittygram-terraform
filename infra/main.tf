@@ -56,3 +56,8 @@ resource "yandex_compute_instance" "vm-1" {
   #   user-data = file("cloud-config")
   # }
 }
+
+output "vm_public_ip" {
+  description = "The public IP of the instance"
+  value       = yandex_compute_instance.vm-1.network_interface.0.nat_ip_address
+}
