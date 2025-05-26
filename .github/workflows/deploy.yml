@@ -29,14 +29,18 @@ jobs:
         run: |
           terraform apply -auto-approve
           
-          RAW_OUTPUT=$(terraform output -raw vm_public_ip)
+          terraform output -raw vm_public_ip > ip.txt
+          IP=$(head -n 1 ip.txt | awk '{print $1}')
+          rm ip.txt
           
-          echo $RAW_OUTPUT
-          
-          IP=$(echo "$RAW_OUTPUT" | awk -F'::' '{print $1}')
-          
-          echo "server_ip=$IP" >> $GITHUB_OUTPUT
-          echo "Extracted IP: $IP"
+#          RAW_OUTPUT=$(terraform output -raw vm_public_ip)
+#
+#          echo $RAW_OUTPUT
+#
+#          IP=$(echo "$RAW_OUTPUT" | awk -F'::' '{print $1}')
+#
+#          echo "server_ip=$IP" >> $GITHUB_OUTPUT
+#          echo "Extracted IP: $IP"
 
 #          JSON_OUTPUT=$(terraform output -json)
 #
